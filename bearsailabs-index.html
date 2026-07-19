@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bears AI Labs — Agentic AI for Logistics &amp; Cybersecurity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0a0a09;
+    --panel:#151310;
+    --panel-2:#1c1914;
+    --fog:#a49a86;
+    --paper:#f1ede2;
+    --gold:#cda13c;
+    --gold-bright:#f0cd7e;
+    --bronze:#b9702f;
+    --line: rgba(205,161,60,0.16);
+    --radius: 3px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3, .display{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  a{color:inherit;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+  @media (max-width:640px){.wrap{padding:0 20px;}}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+
+  /* NAV */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(10,10,9,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 0;
+  }
+  .logo{
+    display:flex; align-items:center; gap:12px;
+    font-size:16px; font-weight:600; letter-spacing:0.02em;
+  }
+  .logo img{
+    height:38px; width:38px; object-fit:contain; flex-shrink:0;
+  }
+  .logo .word small{
+    display:block; font-family:'IBM Plex Mono'; font-size:10px; letter-spacing:0.18em;
+    color:var(--fog); font-weight:400; margin-top:2px;
+  }
+  .navlinks{display:none; gap:32px; font-size:14px; color:var(--fog);}
+  .navlinks a{text-decoration:none; transition:color .15s;}
+  .navlinks a:hover{color:var(--gold-bright);}
+  @media (min-width:860px){.navlinks{display:flex;}}
+  .nav-cta{
+    font-size:13px; padding:9px 16px; border:1px solid var(--gold);
+    border-radius:var(--radius); color:var(--gold); text-decoration:none;
+    white-space:nowrap; transition:background .15s, color .15s;
+  }
+  .nav-cta:hover{background:var(--gold); color:var(--ink);}
+
+  /* HERO */
+  .hero{
+    position:relative;
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  #chart{
+    position:absolute; inset:0; width:100%; height:100%; display:block;
+  }
+  .hero-inner{
+    position:relative; z-index:2;
+    padding:100px 0 130px;
+    display:grid; grid-template-columns:1.3fr 0.9fr; gap:56px; align-items:center;
+  }
+  @media (max-width:900px){.hero-inner{grid-template-columns:1fr; padding-top:64px;}}
+  .hero-mark{display:flex; justify-content:center;}
+  .hero-mark img{width:100%; max-width:320px; filter:drop-shadow(0 0 40px rgba(205,161,60,0.18));}
+  @media (max-width:900px){.hero-mark{order:-1; margin-bottom:8px;} .hero-mark img{max-width:180px;}}
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--gold); margin-bottom:22px; display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{
+    content:''; width:7px; height:7px; background:var(--gold); border-radius:50%;
+    box-shadow:0 0 0 4px rgba(205,161,60,0.15);
+  }
+  .hero h1{
+    font-size:clamp(2.2rem, 4.6vw, 3.8rem);
+    line-height:1.06;
+  }
+  .hero h1 em{
+    font-style:normal; color:var(--gold-bright);
+  }
+  .hero p.lead{
+    max-width:46ch; color:var(--fog); font-size:18px; margin-top:26px;
+  }
+  .hero-actions{
+    display:flex; gap:16px; margin-top:40px; flex-wrap:wrap;
+  }
+  .btn{
+    padding:13px 24px; border-radius:var(--radius); font-size:14.5px; font-weight:500;
+    text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+    transition:transform .15s, background .15s, border-color .15s;
+  }
+  .btn-primary{background:var(--gold); color:var(--ink);}
+  .btn-primary:hover{transform:translateY(-1px); background:var(--gold-bright);}
+  .btn-ghost{border:1px solid var(--line); color:var(--paper);}
+  .btn-ghost:hover{border-color:var(--fog);}
+
+  .hero-stats{
+    display:flex; gap:48px; margin-top:72px; flex-wrap:wrap;
+    border-top:1px solid var(--line); padding-top:28px;
+    grid-column:1 / -1;
+  }
+  .stat-num{font-family:'Space Grotesk'; font-size:1.6rem; color:var(--paper); font-weight:600;}
+  .stat-label{font-family:'IBM Plex Mono'; font-size:11.5px; color:var(--fog); text-transform:uppercase; letter-spacing:0.08em; margin-top:4px;}
+
+  /* SECTION GENERIC */
+  section{padding:104px 0;}
+  .section-head{max-width:640px; margin-bottom:56px;}
+  .section-tag{
+    font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--bronze); margin-bottom:16px; display:block;
+  }
+  .section-head h2{font-size:clamp(1.7rem, 3vw, 2.4rem); line-height:1.15;}
+  .section-head p{color:var(--fog); margin-top:16px; font-size:16.5px;}
+
+  /* DOMAINS SPLIT */
+  .domains{
+    display:grid; grid-template-columns:1fr 1fr; gap:1px;
+    background:var(--line); border:1px solid var(--line); border-radius:6px; overflow:hidden;
+  }
+  @media (max-width:800px){.domains{grid-template-columns:1fr;}}
+  .domain-card{
+    background:var(--panel); padding:44px 40px; position:relative;
+  }
+  .domain-card .icon{width:40px; height:40px; margin-bottom:28px;}
+  .domain-card h3{font-size:1.4rem; margin-bottom:14px;}
+  .domain-card p{color:var(--fog); font-size:15px; margin-bottom:24px;}
+  .domain-card ul{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px;}
+  .domain-card li{
+    font-size:14px; color:var(--paper); display:flex; gap:10px; align-items:flex-start;
+  }
+  .domain-card li::before{
+    content:'→'; color:var(--gold); flex-shrink:0; font-family:'IBM Plex Mono';
+  }
+  .domain-card.security li::before{color:var(--bronze);}
+
+  /* PROTOCOL */
+  .voyage-line{
+    position:relative; display:flex; flex-direction:column; gap:0;
+  }
+  .leg{
+    display:grid; grid-template-columns:120px 1fr; gap:32px;
+    padding:32px 0; border-top:1px solid var(--line);
+  }
+  @media (max-width:640px){.leg{grid-template-columns:1fr;}}
+  .leg-mark{font-family:'IBM Plex Mono'; color:var(--gold); font-size:13px; padding-top:2px;}
+  .leg h3{font-size:1.1rem; margin-bottom:8px;}
+  .leg p{color:var(--fog); font-size:14.5px; max-width:60ch;}
+
+  /* PLATFORM / RE WINDOW */
+  .re-window{
+    border:1px solid var(--line); border-radius:6px; overflow:hidden;
+    background:var(--panel); margin-top:8px;
+  }
+  .re-titlebar{
+    display:flex; align-items:center; gap:8px;
+    padding:10px 14px; background:var(--panel-2); border-bottom:1px solid var(--line);
+  }
+  .re-dot{width:9px; height:9px; border-radius:50%; opacity:0.85;}
+  .re-titletext{color:var(--fog); font-size:11.5px; margin-left:8px;}
+  .re-body{
+    display:grid; grid-template-columns:1.1fr 1fr 0.9fr;
+  }
+  @media (max-width:900px){.re-body{grid-template-columns:1fr;}}
+  .re-pane{
+    padding:18px 20px; border-right:1px solid var(--line);
+    overflow-x:auto;
+  }
+  .re-pane:last-child{border-right:none;}
+  .re-pane-label{
+    font-size:10.5px; letter-spacing:0.1em; color:var(--gold); margin-bottom:12px;
+  }
+  .re-asm pre, .re-decomp pre{
+    margin:0; font-size:12px; line-height:1.7; color:var(--paper); white-space:pre;
+  }
+  .re-decomp pre{color:#d8d2c2;}
+  .re-cfg{display:flex; flex-direction:column;}
+
+  .tool-grid{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line); border-radius:6px; overflow:hidden;
+    margin-top:40px;
+  }
+  @media (max-width:900px){.tool-grid{grid-template-columns:1fr 1fr;}}
+  @media (max-width:560px){.tool-grid{grid-template-columns:1fr;}}
+  .tool-card{background:var(--panel); padding:26px 22px;}
+  .tool-mark{color:var(--gold); font-size:12.5px; letter-spacing:0.06em; margin-bottom:12px;}
+  .tool-card p{color:var(--fog); font-size:13.5px; margin:0; line-height:1.55;}
+  .tool-footnote{color:var(--fog); font-size:13px; margin-top:20px; opacity:0.8;}
+
+  /* QUANTUM LATTICE */
+  .quantum{
+    background:var(--panel);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    position:relative;
+    overflow:hidden;
+  }
+  .quantum .wrap{position:relative; z-index:2;}
+  #lattice{position:absolute; inset:0; width:100%; height:100%; opacity:0.5;}
+  .quantum-grid{
+    display:grid; grid-template-columns:1.1fr 1fr; gap:64px; align-items:center;
+  }
+  @media (max-width:880px){.quantum-grid{grid-template-columns:1fr;}}
+  .quantum-card{
+    background:rgba(10,10,9,0.55); border:1px solid var(--line); border-radius:6px; padding:28px;
+  }
+  .quantum-card + .quantum-card{margin-top:16px;}
+  .quantum-card .mono{color:var(--gold); font-size:12.5px; letter-spacing:0.06em;}
+  .quantum-card h4{font-family:'Space Grotesk'; font-size:1.05rem; margin:10px 0 8px; color:var(--paper);}
+  .quantum-card p{color:var(--fog); font-size:14px; margin:0;}
+
+  /* CTA FOOTER */
+  footer{padding:96px 0 48px;}
+  .cta-block{
+    text-align:center; max-width:640px; margin:0 auto 96px;
+  }
+  .cta-block h2{font-size:clamp(1.8rem,3.4vw,2.6rem); margin-bottom:20px;}
+  .cta-block p{color:var(--fog); margin-bottom:36px;}
+  .cta-buttons{display:flex; gap:16px; justify-content:center; flex-wrap:wrap;}
+
+  .footer-grid{
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:32px;
+    border-top:1px solid var(--line); padding-top:36px;
+    font-size:13.5px; color:var(--fog);
+  }
+  .footer-grid a{text-decoration:none; color:var(--fog); transition:color .15s;}
+  .footer-grid a:hover{color:var(--gold);}
+  .foot-links{display:flex; gap:24px; flex-wrap:wrap;}
+
+  :focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <div class="logo">
+        <img src="bearsai-logo.png" alt="Bears AI Labs logo">
+        <span class="word">BEARS AI LABS<small>LOGISTICS · CYBERSECURITY</small></span>
+      </div>
+      <div class="navlinks">
+        <a href="#domains">Domains</a>
+        <a href="#protocol">Protocol</a>
+        <a href="#platform">Platform</a>
+        <a href="#quantum">Quantum Readiness</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <a class="nav-cta" href="#contact">Request briefing</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <canvas id="chart"></canvas>
+  <div class="wrap hero-inner">
+    <div>
+      <div class="eyebrow">Agentic AI · Logistics &amp; Cybersecurity</div>
+      <h1>Autonomous agents that <em>route</em> the world's cargo — and <em>defend</em> the networks that move it.</h1>
+      <p class="lead">Bears AI Labs builds agentic AI systems that plan freight movement in real time and harden the infrastructure behind it, from first-mile sensors to post-quantum key exchange.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#contact">Request a briefing</a>
+        <a class="btn btn-ghost" href="#platform">See how it works</a>
+      </div>
+    </div>
+    <div class="hero-mark">
+      <img src="bearsai-logo.png" alt="">
+    </div>
+    <div class="hero-stats">
+      <div><span class="stat-num">2</span><span class="stat-label">Core domains</span></div>
+      <div><span class="stat-num">24/7</span><span class="stat-label">Autonomous operation</span></div>
+      <div><span class="stat-num">PQC</span><span class="stat-label">Migration-ready</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="domains">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-tag">Two domains, one agent fabric</span>
+      <h2>Built for the systems that keep goods and data moving safely.</h2>
+      <p>The same orchestration layer that reroutes a shipment around a delayed port also reroutes traffic around a compromised node — because both are just graphs under pressure.</p>
+    </div>
+    <div class="domains">
+      <div class="domain-card logistics">
+        <svg class="icon" viewBox="0 0 40 40" fill="none"><path d="M4 28 L4 14 L14 8 L26 8 L36 14 L36 28 L26 34 L14 34 Z" stroke="#cda13c" stroke-width="1.3"/><path d="M4 14 L20 20 L36 14 M20 20 L20 34" stroke="#cda13c" stroke-width="1"/></svg>
+        <h3>Logistics agents</h3>
+        <p>Agents that see the network as a whole and act on it continuously, not just at planning time.</p>
+        <ul>
+          <li>Dynamic route replanning across carriers, ports, and modes</li>
+          <li>Exception handling for delays, customs holds, and capacity shocks</li>
+          <li>Multi-agent negotiation between shippers, carriers, and warehouses</li>
+          <li>Live ETA and cost forecasting fed back into the planning loop</li>
+        </ul>
+      </div>
+      <div class="domain-card security">
+        <svg class="icon" viewBox="0 0 40 40" fill="none"><path d="M20 4 L34 10 V19 C34 28 28 33 20 36 C12 33 6 28 6 19 V10 Z" stroke="#b9702f" stroke-width="1.3"/><path d="M14 20 L18 24 L27 14" stroke="#b9702f" stroke-width="1.4"/></svg>
+        <h3>Cybersecurity agents</h3>
+        <p>Agents that watch the same operational graph for signals a human analyst would catch too late.</p>
+        <ul>
+          <li>Autonomous triage and containment of anomalous traffic</li>
+          <li>Binary and firmware analysis pipelines for supply-chain hardware</li>
+          <li>Zero-trust policy enforcement across logistics endpoints and IoT</li>
+          <li>Continuous adversary emulation against the live network graph</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="protocol">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-tag">How an agent's decision actually ships</span>
+      <h2>One decision, three moves.</h2>
+      <p>Every action our agents take — reroute a container, quarantine a host — follows the same accountable path from signal to action.</p>
+    </div>
+    <div class="voyage-line">
+      <div class="leg">
+        <div class="leg-mark">01 · SENSE</div>
+        <div>
+          <h3>Ingest &amp; correlate</h3>
+          <p>Telemetry from carriers, port systems, network sensors, and endpoint agents is normalized into one operational graph, so a shipping delay and a suspicious login are legible in the same model.</p>
+        </div>
+      </div>
+      <div class="leg">
+        <div class="leg-mark">02 · REASON</div>
+        <div>
+          <h3>Plan under constraint</h3>
+          <p>Agents evaluate candidate actions against cost, risk, and policy constraints before acting, with binary and firmware analysis for security decisions built on Ghidra, the NSA's open-source reverse-engineering framework, integrated into the triage pipeline.</p>
+        </div>
+      </div>
+      <div class="leg">
+        <div class="leg-mark">03 · ACT</div>
+        <div>
+          <h3>Execute &amp; log</h3>
+          <p>Actions execute through scoped, revocable credentials, and every decision is logged with the evidence that produced it — so a human can audit any reroute or containment after the fact.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="platform">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-tag">Under the hood of the security agents</span>
+      <h2>Built on the open-source reverse-engineering stack, not around it.</h2>
+      <p>Rather than a closed black box, our binary analysis pipeline wraps well-known, publicly-vetted open-source tools — so every finding an agent surfaces can be traced back to a tool a human analyst already trusts.</p>
+    </div>
+
+    <div class="re-window">
+      <div class="re-titlebar">
+        <span class="re-dot" style="background:#e0664b"></span>
+        <span class="re-dot" style="background:#e0b84b"></span>
+        <span class="re-dot" style="background:#6bbf8a"></span>
+        <span class="re-titletext mono">sample_firmware.bin — analysis session</span>
+      </div>
+      <div class="re-body">
+        <div class="re-pane re-asm">
+          <div class="re-pane-label mono">DISASSEMBLY</div>
+          <pre class="mono">0x00401020  push  ebp
+0x00401021  mov   ebp, esp
+0x00401023  sub   esp, 0x18
+0x00401026  mov   eax, [ebp+0x8]
+0x00401029  test  eax, eax
+0x0040102b  je    0x00401050
+0x0040102d  mov   ecx, [eax+0x4]
+0x00401030  cmp   ecx, 0x0
+0x00401033  jle   0x00401050
+0x00401035  call  0x00402110
+0x0040103a  mov   [ebp-0x4], eax
+0x0040103d  jmp   0x00401055</pre>
+        </div>
+        <div class="re-pane re-decomp">
+          <div class="re-pane-label mono">DECOMPILED VIEW</div>
+          <pre class="mono">int handle_packet(header *h) {
+  if (h == NULL) {
+    return -1;
+  }
+  if (h-&gt;length &gt; 0) {
+    result = validate_checksum(h);
+  }
+  return result;
+}</pre>
+        </div>
+        <div class="re-pane re-cfg">
+          <div class="re-pane-label mono">CONTROL FLOW</div>
+          <svg viewBox="0 0 220 200" width="100%" height="180">
+            <rect x="70" y="6" width="80" height="26" rx="3" fill="none" stroke="#cda13c" stroke-width="1.2"/>
+            <text x="110" y="23" text-anchor="middle" fill="#cda13c" font-size="9" font-family="IBM Plex Mono">entry</text>
+            <rect x="10" y="86" width="80" height="26" rx="3" fill="none" stroke="#a49a86" stroke-width="1.2"/>
+            <text x="50" y="103" text-anchor="middle" fill="#a49a86" font-size="9" font-family="IBM Plex Mono">null_check</text>
+            <rect x="130" y="86" width="80" height="26" rx="3" fill="none" stroke="#a49a86" stroke-width="1.2"/>
+            <text x="170" y="103" text-anchor="middle" fill="#a49a86" font-size="9" font-family="IBM Plex Mono">validate</text>
+            <rect x="70" y="166" width="80" height="26" rx="3" fill="none" stroke="#b9702f" stroke-width="1.2"/>
+            <text x="110" y="183" text-anchor="middle" fill="#f0cd7e" font-size="9" font-family="IBM Plex Mono">return</text>
+            <path d="M100 32 L55 86" stroke="#cda13c" stroke-width="1" fill="none"/>
+            <path d="M120 32 L165 86" stroke="#cda13c" stroke-width="1" fill="none"/>
+            <path d="M55 112 L100 166" stroke="#a49a86" stroke-width="1" fill="none"/>
+            <path d="M170 112 L120 166" stroke="#a49a86" stroke-width="1" fill="none"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-grid">
+      <div class="tool-card">
+        <div class="tool-mark mono">GHIDRA</div>
+        <p>The NSA's open-source software reverse-engineering suite — disassembler, decompiler, and scripting engine — anchors static analysis of binaries and firmware images.</p>
+      </div>
+      <div class="tool-card">
+        <div class="tool-mark mono">RADARE2 / CUTTER</div>
+        <p>A scriptable command-line RE framework with the Cutter GUI on top, used for fast triage and batch analysis across large sets of samples.</p>
+      </div>
+      <div class="tool-card">
+        <div class="tool-mark mono">YARA</div>
+        <p>Pattern-matching rules identify known malware families and suspicious code structures across incoming binaries and network payloads.</p>
+      </div>
+      <div class="tool-card">
+        <div class="tool-mark mono">VOLATILITY 3</div>
+        <p>Open-source memory forensics extracts running processes, network state, and injected code from device memory captures during incident response.</p>
+      </div>
+    </div>
+    <p class="tool-footnote">All four are independent, publicly available open-source projects. Bears AI Labs agents orchestrate them and reason over their output — we don't fork or obscure the underlying tools.</p>
+  </div>
+</section>
+
+<section id="quantum" class="quantum">
+  <canvas id="lattice"></canvas>
+  <div class="wrap">
+    <div class="quantum-grid">
+      <div>
+        <span class="section-tag">Preparing for cryptographically relevant quantum computers</span>
+        <h2 style="font-size:clamp(1.7rem,3vw,2.3rem); line-height:1.15; margin-bottom:18px;">Logistics and security data has a long shelf life. Our cryptography has to outlive today's threat model.</h2>
+        <p style="color:var(--fog); font-size:16px;">Shipment manifests, customs records, and network credentials often stay sensitive for years — long enough for "harvest now, decrypt later" attacks to matter. We're migrating key exchange and signing toward NIST's post-quantum standards well ahead of any mandate.</p>
+      </div>
+      <div>
+        <div class="quantum-card">
+          <span class="mono">ML-KEM</span>
+          <h4>Lattice-based key exchange</h4>
+          <p>Replacing classical key exchange in agent-to-agent channels with a lattice-based scheme designed to resist quantum attack.</p>
+        </div>
+        <div class="quantum-card">
+          <span class="mono">ML-DSA / SLH-DSA</span>
+          <h4>Post-quantum signing</h4>
+          <p>Action logs and audit trails are signed with algorithms standardized by NIST for a post-quantum world, so provenance holds up over time.</p>
+        </div>
+        <div class="quantum-card">
+          <span class="mono">CRYPTO-AGILITY</span>
+          <h4>Swappable primitives</h4>
+          <p>Cryptographic primitives sit behind an abstraction layer, so new standards can be adopted without re-architecting the agent fabric.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="cta-block">
+      <span class="section-tag" style="text-align:center;">Get in touch</span>
+      <h2>Bring your logistics and security stack into one agent fabric.</h2>
+      <p>Tell us what you're moving and what you're defending — we'll come back with a plan, not a pitch deck.</p>
+      <div class="cta-buttons">
+        <a class="btn btn-primary" href="mailto:hello@bearsailabs.com">hello@bearsailabs.com</a>
+        <a class="btn btn-ghost" href="#platform">See how it works</a>
+      </div>
+    </div>
+    <div class="footer-grid">
+      <div>© 2026 Bears AI Labs. All rights reserved.</div>
+      <div class="foot-links">
+        <a href="#domains">Domains</a>
+        <a href="#protocol">Protocol</a>
+        <a href="#platform">Platform</a>
+        <a href="#quantum">Quantum</a>
+        <a href="mailto:hello@bearsailabs.com">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const canvas = document.getElementById('chart');
+  const ctx = canvas.getContext('2d');
+  const hero = document.querySelector('.hero');
+  let w, h, nodes, routes;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resize(){
+    w = canvas.width = hero.offsetWidth;
+    h = canvas.height = hero.offsetHeight;
+    const n = Math.max(6, Math.round(w/220));
+    nodes = Array.from({length:n}, (_,i) => ({
+      x: (w/(n-1))*i + (Math.random()-0.5)*60,
+      y: h*0.22 + Math.sin(i*1.3)*h*0.14 + (Math.random()-0.5)*40
+    }));
+    routes = [];
+    for(let i=0;i<nodes.length-1;i++){
+      routes.push({a:i, b:i+1, offset: Math.random()});
+      if(i < nodes.length-2 && Math.random() > 0.5){
+        routes.push({a:i, b:i+2, offset: Math.random()});
+      }
+    }
+  }
+
+  function draw(t){
+    ctx.clearRect(0,0,w,h);
+    ctx.strokeStyle = 'rgba(205,161,60,0.05)';
+    ctx.lineWidth = 1;
+    for(let x=0; x<w; x+=48){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+
+    routes.forEach(r=>{
+      const A = nodes[r.a], B = nodes[r.b];
+      ctx.strokeStyle = 'rgba(205,161,60,0.24)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(A.x, A.y);
+      ctx.lineTo(B.x, B.y);
+      ctx.stroke();
+
+      if(!reduced){
+        const prog = (t/4000 + r.offset) % 1;
+        const px = A.x + (B.x-A.x)*prog;
+        const py = A.y + (B.y-A.y)*prog;
+        ctx.beginPath();
+        ctx.arc(px, py, 2.4, 0, Math.PI*2);
+        ctx.fillStyle = '#b9702f';
+        ctx.fill();
+      }
+    });
+
+    nodes.forEach((n)=>{
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, 3.2, 0, Math.PI*2);
+      ctx.fillStyle = '#cda13c';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, 7, 0, Math.PI*2);
+      ctx.strokeStyle = 'rgba(205,161,60,0.28)';
+      ctx.stroke();
+    });
+  }
+
+  function loop(t){
+    draw(t);
+    if(!reduced) requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  if(reduced){ draw(0); } else { requestAnimationFrame(loop); }
+})();
+
+(function(){
+  const canvas = document.getElementById('lattice');
+  const ctx = canvas.getContext('2d');
+  const section = document.getElementById('quantum');
+
+  function resize(){
+    canvas.width = section.offsetWidth;
+    canvas.height = section.offsetHeight;
+    draw();
+  }
+
+  function draw(){
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0,0,w,h);
+    const size = 46;
+    ctx.strokeStyle = 'rgba(205,161,60,0.10)';
+    ctx.lineWidth = 1;
+    for(let y=0; y<h+size; y+=size*0.87){
+      for(let x=0; x<w+size; x+=size){
+        const offset = (Math.round(y/(size*0.87)) % 2) * (size/2);
+        const cx = x + offset;
+        ctx.beginPath();
+        ctx.moveTo(cx, y);
+        ctx.lineTo(cx+size/2, y+size*0.43);
+        ctx.lineTo(cx+size/2, y+size*0.87+ size*0.43 - size*0.87);
+        ctx.stroke();
+      }
+    }
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+})();
+</script>
+
+</body>
+</html>
